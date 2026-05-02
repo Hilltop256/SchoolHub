@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 
 // Reusable UI Components
@@ -105,297 +107,194 @@ const UDataTable = ({ columns, data, className = '' }: any) => (
   </UCard>
 );
 
-// Login Component Interface
-interface LoginProps {
-  onLogin: () => void;
-}
-
 // Login Component
-const Login: React.FC<LoginProps> = ({ onLogin }) => {
+const Login = ({ onLogin }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | undefined>(undefined);
+  const [error, setError] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
-    setError(undefined);
-    
+    setError('');
+
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Simple validation
-      if (email === 'admin@example.com' && password === 'password') {
-        // In a real app, you would redirect to dashboard
-        alert('Login successful!');
-        onLogin();
-      } else {
-        throw new Error('Invalid credentials');
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+      onLogin({ id: '1', email, role: 'admin' });
+    } catch (err: any) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Or
-            <a href="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
-              start a trial
-            </a>
-          </p>
+    <div className="min-h-screen bg-neutral-900 flex items-center justify-center p-4">
+      <UCard className="w-full max-w-md">
+        <div className="text-center mb-6">
+          <h1 className="text-3xl font-bold mb-2">School Hub</h1>
+          <p className="text-neutral-400">Uganda School Management System</p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Email address
-            </label>
-            <UInput
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              className={error ? 'border-red-500' : ''}
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
-            <UInput
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              className={error ? 'border-red-500' : ''}
-            />
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                Remember me
-              </label>
+
+        <div className="grid grid-cols-3 gap-2 mb-6">
+          <UButton variant="secondary" className="text-sm py-2">Admin</UButton>
+          <UButton variant="secondary" className="text-sm py-2">Bursar</UButton>
+          <UButton variant="secondary" className="text-sm py-2">Teacher</UButton>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm mb-1">Email</label>
+              <UInput value={email} onChange={setEmail} placeholder="Enter email" />
             </div>
-            <div className="text-sm">
-              <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-                Forgot password?
-              </a>
+            <div>
+              <label className="block text-sm mb-1">Password</label>
+              <UInput value={password} onChange={setPassword} type="password" placeholder="Enter password" />
             </div>
+            {error && <p className="text-danger-500 text-sm">{error}</p>}
+            <UButton type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Signing in...' : 'Sign In'}
+            </UButton>
           </div>
-          <UButton type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign in'}
-          </UButton>
-          <p className="text-center text-sm text-gray-500">
-            Don’t have an account?
-            <a href="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
-              Start a trial
-            </a>
-          </p>
         </form>
-      </div>
+
+        <div className="mt-6 text-center text-sm text-neutral-400">
+          <p>Demo credentials:</p>
+          <p>admin@sh.ug / admin</p>
+          <p>bursar@sh.ug / bursar</p>
+          <p>teacher@sh.ug / teacher</p>
+        </div>
+      </UCard>
     </div>
   );
 };
 
 // AppLayout Component
-const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return (
-    <div className="min-h-screen bg-neutral-900 text-neutral-100">
-      <header className="bg-neutral-800 border-b border-neutral-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex">
-              <div className="flex-shrink-0 flex items-center">
-                <h1 className="text-xl font-semibold text-primary-400">SchoolHub</h1>
-              </div>
-              <div className="hidden md:block">
-                <div className="ml-10 flex items-baseline space-x-4">
-                  <a href="#" className="px-3 py-2 rounded-md text-sm font-medium text-neutral-400 hover:text-neutral-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-neutral-800 focus:ring-primary-500">
-                    Dashboard
-                  </a>
-                  <a href="#" className="px-3 py-2 rounded-md text-sm font-medium text-neutral-400 hover:text-neutral-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-neutral-800 focus:ring-primary-500">
-                    Students
-                  </a>
-                  <a href="#" className="px-3 py-2 rounded-md text-sm font-medium text-neutral-400 hover:text-neutral-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-neutral-800 focus:ring-primary-500">
-                    Payments
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center">
-              <div className="ml-3 relative">
-                <div className="flex items-center">
-                  <span className="text-sm font-medium text-neutral-400">Admin</span>
-                  <UButton variant="secondary" size="sm" className="ml-2">
-                    Profile
-                  </UButton>
-                </div>
-              </div>
+const AppLayout = ({ user, children, onLogout }: any) => (
+  <div className="min-h-screen bg-neutral-900">
+    <nav className="bg-neutral-800 border-b border-neutral-700 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex items-center space-x-8">
+            <h1 className="text-xl font-bold text-white">School Hub</h1>
+            <div className="hidden md:flex space-x-1">
+              <AppNavLink to="dashboard" label="Dashboard" />
+              <AppNavLink to="students" label="Students" />
+              <AppNavLink to="payments" label="Payments" />
+              <AppNavLink to="attendance" label="Attendance" />
+              <AppNavLink to="report-cards" label="Report Cards" />
             </div>
           </div>
+          <div className="flex items-center space-x-4">
+            <span className="text-sm text-neutral-400 hidden sm:block">{user?.role || 'User'}</span>
+            <UButton variant="secondary" onClick={onLogout} className="text-sm">Logout</UButton>
+          </div>
         </div>
-      </header>
-      <main>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          {children}
-        </div>
-      </main>
-    </div>
+      </div>
+    </nav>
+    <main className="max-w-7xl mx-auto px-4 py-6">{children}</main>
+  </div>
+);
+
+const AppNavLink = ({ to, label, activePage, onPageChange }: any) => {
+  const isActive = activePage === to;
+  return (
+    <button
+      onClick={() => onPageChange(to)}
+      className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${isActive ? 'bg-primary-600 text-white' : 'text-neutral-300 hover:text-white hover:bg-neutral-700'}`}
+    >
+      {label}
+    </button>
   );
 };
 
-// Dashboard Component Interface
-interface DashboardProps {
-  onLogout: () => void;
-}
-
 // Dashboard Component
-const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
-  const [stats, setStats] = useState([
-    { title: 'Total Students', value: '1,245', icon: '👥', trend: 12 },
-    { title: 'Monthly Revenue', value: '$45,200', icon: '💰', trend: 8 },
-    { title: 'Attendance Rate', value: '94.2%', icon: '📊', trend: 5 },
-    { title: 'Upcoming Events', value: '12', icon: '📅', trend: -3 }
-  ]);
+const Dashboard = () => {
+  const [stats] = useState({
+    totalStudents: 1250,
+    totalTeachers: 45,
+    totalClasses: 24,
+    totalRevenue: 45678900,
+    outstandingBalance: 2345000,
+    attendanceRate: 94,
+  });
 
-  const [recentStudents, setRecentStudents] = useState([
-    { id: 1, name: 'John Doe', grade: '10th', status: 'Active' },
-    { id: 2, name: 'Jane Smith', grade: '11th', status: 'Active' },
-    { id: 3, name: 'Bob Johnson', grade: '9th', status: 'Inactive' }
+  const [recentPayments] = useState([
+    { id: 1, student: 'Mugisha John', amount: 150000, date: '2026-04-15', method: 'Cash' },
+    { id: 2, student: 'Nakato Sarah', amount: 150000, date: '2026-04-14', method: 'Mobile Money' },
+    { id: 3, student: 'Kato Peter', amount: 150000, date: '2026-04-14', method: 'Bank Transfer' },
+    { id: 4, student: 'Namukasa Grace', amount: 75000, date: '2026-04-13', method: 'Cash' },
+    { id: 5, student: 'Ssentongo David', amount: 150000, date: '2026-04-13', method: 'Mobile Money' },
   ]);
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat, index) => (
-          <UStatCard key={index} {...stat} />
-        ))}
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">Dashboard</h2>
+        <div className="text-sm text-neutral-400">Demo School</div>
       </div>
-      
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <UStatCard title="Total Students" value={stats.totalStudents.toLocaleString()} icon="👥" trend={5} />
+        <UStatCard title="Total Teachers" value={stats.totalTeachers} icon="🏫" trend={2} />
+        <UStatCard title="Total Revenue (UGX)" value={stats.totalRevenue.toLocaleString()} icon="💰" trend={12} />
+        <UStatCard title="Attendance Rate" value={`${stats.attendanceRate}%`} icon="✅" trend={3} />
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div>
-          <UCard>
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Recent Students</h2>
-              <UButton variant="secondary" size="sm">
-                View All
-              </UButton>
+        <UCard>
+          <h3 className="text-lg font-semibold mb-4">Outstanding Fees</h3>
+          <div className="space-y-3">
+            <div className="flex justify-between">
+              <span className="text-neutral-400">Total Outstanding</span>
+              <span className="font-bold text-danger-500">UGX {stats.outstandingBalance.toLocaleString()}</span>
             </div>
-            <UDataTable
-              columns={[
-                { header: 'Name', accessor: 'name' },
-                { header: 'Grade', accessor: 'grade' },
-                { header: 'Status', accessor: 'status', cell: (row: any) => (
-                  <span className={`px-2 py-1 rounded-full text-xs ${row.status === 'Active' ? 'bg-green-600/20 text-green-400' : 'bg-red-600/20 text-red-400'}`}>
-                    {row.status}
-                  </span>
-                )}
-              ]}
-              data={recentStudents}
-            />
-          </UCard>
-        </div>
-        
-        <div>
-          <UCard>
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Payment Overview</h2>
+            <div className="w-full bg-neutral-700 rounded-full h-2">
+              <div className="bg-danger-500 h-2 rounded-full" style={{ width: '35%' }}></div>
             </div>
-            <div className="space-y-4">
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-primary-600/20 rounded-lg flex items-center justify-center">
-                  💳
-                </div>
-                <div className="ml-4">
-                  <p className="text-neutral-400 text-sm">Outstanding Fees</p>
-                  <p className="text-2xl font-bold">$8,450</p>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-success-600/20 rounded-lg flex items-center justify-center">
-                  ✅
-                </div>
-                <div className="ml-4">
-                  <p className="text-neutral-400 text-sm">Collected This Month</p>
-                  <p className="text-2xl font-bold">$22,300</p>
-                </div>
-              </div>
-            </div>
-          </UCard>
-        </div>
+          </div>
+        </UCard>
+
+        <UCard>
+          <h3 className="text-lg font-semibold mb-4">Recent Payments</h3>
+          <UDataTable
+            columns={[
+              { key: 'student', header: 'Student' },
+              { key: 'amount', header: 'Amount', render: (r: any) => `UGX ${r.amount.toLocaleString()}` },
+              { key: 'date', header: 'Date' },
+              { key: 'method', header: 'Method' },
+            ]}
+            data={recentPayments}
+          />
+        </UCard>
       </div>
     </div>
   );
 };
 
-// Main SchoolHubApp Component
-const SchoolHubApp: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    const token = localStorage.getItem('authToken');
-    return !!token;
-  });
-  const [currentView, setCurrentView] = useState<'login' | 'dashboard'>(() => {
-    const token = localStorage.getItem('authToken');
-    return !!token ? 'dashboard' : 'login';
-  });
+// Main App Component
+export default function SchoolHubApp() {
+  const [user, setUser] = useState<any>(null);
+  const [school, setSchool] = useState<any>(null);
 
-  useEffect(() => {
-    // Listen for storage changes to handle logout in other tabs
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'authToken') {
-        setIsAuthenticated(!!e.newValue);
-        setCurrentView(!!e.newValue ? 'dashboard' : 'login');
-      }
-    };
-    
-    window.addEventListener('storage', handleStorageChange);
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, []);
+  async function handleLogin(userData: any) {
+    setUser(userData);
+    setSchool({ name: 'Demo School', code: 'DEMO' });
+  }
 
-  const handleLogin = () => {
-    setIsAuthenticated(true);
-    setCurrentView('dashboard');
-    localStorage.setItem('authToken', 'fake-token');
-  };
+  function handleLogout() {
+    setUser(null);
+    setSchool(null);
+  }
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setCurrentView('login');
-    localStorage.removeItem('authToken');
-  };
+  if (!user) {
+    return <Login onLogin={handleLogin} />;
+  }
 
   return (
-    <>
-      {!isAuthenticated && currentView === 'login' && (
-        <Login onLogin={handleLogin} />
-      )}
-      
-      {isAuthenticated && (
-        <AppLayout>
-          {currentView === 'dashboard' && <Dashboard onLogout={handleLogout} />}
-        </AppLayout>
-      )}
-    </>
+    <AppLayout user={user} onLogout={handleLogout}>
+      <Dashboard />
+    </AppLayout>
   );
-};
-
-export default SchoolHubApp;
+}
