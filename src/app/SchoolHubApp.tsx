@@ -78,9 +78,9 @@ const UDataTable = ({ columns, data, className = '' }: any) => (
       <table className="min-w-full divide-y divide-neutral-700">
         <thead className="bg-neutral-900">
           <tr>
-            {columns.map((column: any) => (
+            {columns.map((column: any, colIndex: number) => (
               <th
-                key={column.accessor}
+                key={`col-${column.accessor}-${colIndex}`}
                 className="px-6 py-3 text-left text-xs font-medium text-neutral-400 uppercase tracking-wider"
               >
                 {column.header}
@@ -89,11 +89,11 @@ const UDataTable = ({ columns, data, className = '' }: any) => (
           </tr>
         </thead>
         <tbody className="divide-y divide-neutral-700 bg-neutral-800">
-          {data.map((row: any) => (
-            <tr key={row.id} className="hover:bg-neutral-700">
-              {columns.map((column: any) => (
+          {data.map((row: any, rowIndex: number) => (
+            <tr key={row.id || `row-${rowIndex}`} className="hover:bg-neutral-700">
+              {columns.map((column: any, colIndex: number) => (
                 <td
-                  key={`${row.id}-${column.accessor}`}
+                  key={`${row.id || `row-${rowIndex}`}-${column.accessor}-${colIndex}`}
                   className="px-6 py-4 whitespace-nowrap text-sm text-neutral-100"
                 >
                   {typeof column.cell === 'function' ? column.cell(row) : row[column.accessor]}
