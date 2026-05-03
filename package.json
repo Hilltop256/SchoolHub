@@ -1,13 +1,19 @@
 {
-  "name": "nextjs-template",
-  "version": "0.1.0",
+  "name": "school-hub-uganda",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "preview": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit"
+    "lint:fix": "eslint --fix",
+    "typecheck": "tsc --noEmit",
+    "analyze": "ANALYZE=true next build",
+    "vercel-build": "bun run typecheck && bun run lint && bun run build",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,css,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,css,md}\""
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.1",
@@ -27,5 +33,17 @@
     "eslint": "^9.39.1",
     "eslint-config-next": "^16.0.0",
     "typescript": "^5.9.3"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

@@ -258,24 +258,125 @@ Before going live, verify:
 
 ### Option 1: Vercel (Recommended)
 
+Vercel provides the best experience for Next.js applications with automatic deployments, previews, and environment management.
+
+#### One-Click Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-org/school-hub)
+
+#### Manual Deployment
+
 ```bash
+# Install Vercel CLI (if not already installed)
 npm install -g vercel
+
+# Link your project to Vercel
 vercel
+
+# Add environment variables
+vercel env add NEXT_PUBLIC_SUPABASE_URL production
+vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY production
+
+# Deploy to production
+vercel --prod
 ```
+
+#### Vercel Configuration
+
+The project includes a `vercel.json` file with optimized settings:
+- Build command: `bun run build`
+- Dev command: `bun run dev`
+- Install command: `bun install`
+- Automatic cron jobs for fee reminders
+
+#### Environment Variables
+
+Set these in your Vercel dashboard (Project Settings → Environment Variables):
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase project URL | Yes |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Your Supabase anon key | Yes |
+
+#### Preview Deployments
+
+Vercel automatically creates preview deployments for every pull request, allowing you to test changes before merging to production.
 
 ### Option 2: Netlify
 
 ```bash
 npm run build
-# Drag `dist/` folder to Netlify
+# Upload the `.next/` or `out/` folder to Netlify
 ```
 
 ### Option 3: Self-Hosted
 
 ```bash
 npm run build
-# Serve `dist/` with Nginx or Apache
+# Serve the `.next/` folder with Nginx or Apache
 ```
+
+#### Nginx Configuration
+
+```nginx
+server {
+    listen 80;
+    server_name your-domain.com;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
+
+### Docker Deployment
+
+```bash
+# Build the image
+docker build -t school-hub .
+
+# Run the container
+docker run -p 3000:3000 \
+  -e NEXT_PUBLIC_SUPABASE_URL=your-url \
+  -e NEXT_PUBLIC_SUPABASE_ANON_KEY=your-key \
+  school-hub
+```
+
+## 🔧 Build Optimization
+
+The application is optimized for production with:
+
+- **Code Splitting**: Automatic route-based code splitting
+- **Image Optimization**: Next.js Image component for automatic image optimization
+- **Font Optimization**: Automatic font loading with `font-display: swap`
+- **Prefetching**: Automatic prefetching of visible links
+- **Compression**: Built-in Brotli and gzip compression
+- **Tree Shaking**: Automatic removal of unused code
+- **Minification**: JavaScript and CSS minification
+
+### Build Analysis
+
+To analyze your bundle size:
+
+```bash
+npm run analyze
+```
+
+This will generate a visual report of your bundle composition.
+
+## 🌐 Vercel Performance Features
+
+- **Edge Functions**: Deploy API routes to the Edge for faster response times
+- **ISR (Incremental Static Regeneration)**: Cache dynamic content at the edge
+- **Image Optimization**: Automatic WebP/AVIF conversion and resizing
+- **Automatic HTTPS**: Free SSL certificates via Let's Encrypt
+- **CDN Distribution**: Global CDN with 35+ regions
+- **Zero Config**: No webpack or Babel configuration needed
 
 ## 📋 Phase 2 Roadmap
 
