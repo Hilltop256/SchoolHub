@@ -1,0 +1,32 @@
+{
+  "buildCommand": "bun run vercel-build",
+  "devCommand": "bun run dev",
+  "installCommand": "bun install",
+  "framework": "nextjs",
+  "env": {
+    "NEXT_PUBLIC_SUPABASE_URL": {
+      "description": "Supabase Project URL",
+      "required": true
+    },
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": {
+      "description": "Supabase Anonymous Key",
+      "required": true
+    }
+  },
+  "build": {
+    "env": {
+      "NEXT_TELEMETRY_DISABLED": "1"
+    }
+  },
+  "regions": ["iad1"],
+  "crons": [
+    {
+      "path": "/api/cron/sync-attendance",
+      "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/cron/send-fee-reminders",
+      "schedule": "0 9 * * 1"
+    }
+  ]
+}
