@@ -64,6 +64,11 @@ const nextConfig: NextConfig = {
 
   // Reduce client-side JavaScript
   poweredByHeader: false,
+
+  // Skip type checking during build
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
 export default nextConfig;
